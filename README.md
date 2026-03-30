@@ -15,7 +15,7 @@ The available commands are listed below:
 - `linkage`: Performs the linkage between datasets;
 - `jupyter`: Jupyter server used to execute ml notebooks.
 
-The flag `--no-deps` can be used to execute the services `process`, `train_model` and `linkage` solo, since they depend on the previous one (`process` depends on `acquire`).
+The flag `--no-deps` can be used to execute `process`, `train_model` and `linkage` services solo, since they are dependent on the previous (e.g. `process` depends on `acquire`).
 
 ## License
 [GNU](./LICENSE)

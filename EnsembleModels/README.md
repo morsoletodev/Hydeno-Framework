@@ -7,7 +7,7 @@ The following notebooks present an exploratory analysis of each ensembler with e
  - `1-randomForest.ipynb`
  - `1-xgboost.ipynb`
 
-Lastly, `2-HPO.ipynb` performs hyperparameter optimization on the two best models found (one with the highiest Recall and one with F1-score).
+Lastly, `2-HPO.ipynb` performs hyperparameter optimization on the two best models, selected based on highest Recall and F1-score achieved.
 
 ## Dependencies  
 Dependencies can be found at [pyproject.toml](./pyproject.toml).
