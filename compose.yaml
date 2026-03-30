@@ -1,0 +1,60 @@
+name: "datasus_ml_pipeline"
+services:
+    base_datapipeline: &base
+        build:
+            context: ./DataPipeline
+            dockerfile: Dockerfile
+        image: ml_datapipeline
+        volumes:  
+            - ./data:/app/data
+            - ./models:/app/models
+            - ./logs:/app/logs
+
+    acquire:
+        <<: *base
+        container_name: acquire
+        command: ["acquire"]
+
+    process:
+        <<: *base
+        container_name: process
+        command: ["process"]
+        depends_on:
+            acquire:
+                condition:
+                    service_completed_successfully
+
+    train:
+        <<: *base
+        container_name: train
+        command: ["train"]    
+        depends_on:
+            process:
+                condition:
+                    service_completed_successfully
+
+    linkage:
+        <<: *base
+        container_name: linkage
+        command: ["linkage"]
+        depends_on:
+            process:
+                condition:
+                    service_completed_successfully
+
+    jupyter:
+        container_name: jupyter
+        build:
+            context: ./EnsembleModels
+            dockerfile: Dockerfile
+        image: ml_jupyter
+        user: "${CURRENT_UID:-1000}:${CURRENT_GID:-1000}"
+        ports:
+            - 8888:8888
+        volumes:
+            - ./EnsembleModels/src:/home/jovyan/work/src
+            - ./EnsembleModels/notebooks:/home/jovyan/work
+            - ./data:/home/jovyan/work/data
+            - ./models:/home/jovyan/work/models
+            - ./logs:/home/jovyan/work/logs
+        command: start-notebook.sh --NotebookApp.token=

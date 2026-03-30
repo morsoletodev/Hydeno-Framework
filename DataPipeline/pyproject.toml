@@ -1,0 +1,25 @@
+[project]
+name = "datapipeline"
+version = "1.0.0"
+description = ""
+authors = [
+    {name = "R. Morsoleto",email = "106322393+morsoletodev@users.noreply.github.com"}
+]
+readme = "README.md"
+requires-python = ">=3.11,<4.0.0"
+dependencies = [
+    "etlsus @ git+https://github.com/GOPAD-Datasus/etlSUS.git",
+    "splink (>=4.0.15,<5.0.0)",
+    "pandas (>=2.3.3)",
+    "numpy (>=2.4.3,<3.0.0)",
+    "typer (>=0.24.1,<0.25.0)",
+]
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.poetry]
+packages = [
+    { include = "src" },
+]
