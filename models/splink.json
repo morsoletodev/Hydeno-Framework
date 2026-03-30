@@ -1,0 +1,222 @@
+{
+    "link_type": "link_only",
+    "probability_two_random_records_match": 7.279037713719645e-06,
+    "retain_matching_columns": true,
+    "retain_intermediate_calculation_columns": true,
+    "additional_columns_to_retain": [],
+    "sql_dialect": "duckdb",
+    "linker_uid": "k0rx3olh",
+    "em_convergence": 0.0001,
+    "max_iterations": 25,
+    "bayes_factor_column_prefix": "bf_",
+    "term_frequency_adjustment_column_prefix": "tf_",
+    "comparison_vector_value_column_prefix": "gamma_",
+    "unique_id_column_name": "unique_id",
+    "source_dataset_column_name": "source_dataset",
+    "blocking_rules_to_generate_predictions": [
+        {
+            "blocking_rule": "(l.\"DTNASC\" = r.\"DTNASC\") AND (l.\"CODMUN\" = r.\"CODMUN\")",
+            "sql_dialect": "duckdb"
+        }
+    ],
+    "comparisons": [
+        {
+            "output_column_name": "Weight Threshold",
+            "comparison_levels": [
+                {
+                    "sql_condition": "\"PESO_l\" IS NULL OR \"PESO_r\" IS NULL",
+                    "label_for_charts": "PESO is NULL",
+                    "fix_m_probability": false,
+                    "fix_u_probability": false,
+                    "is_null_level": true
+                },
+                {
+                    "sql_condition": "\"PESO_l\" = \"PESO_r\"",
+                    "label_for_charts": "Exact match on PESO",
+                    "m_probability": 0.9532771356324984,
+                    "u_probability": 0.0007245670995670995,
+                    "fix_m_probability": false,
+                    "fix_u_probability": false
+                },
+                {
+                    "sql_condition": "ABS(\"PESO_l\" - \"PESO_r\") <= 5",
+                    "label_for_charts": "Absolute difference of 'PESO' <= 5",
+                    "m_probability": 0.024451942104344385,
+                    "u_probability": 0.0015151515151515152,
+                    "fix_m_probability": false,
+                    "fix_u_probability": false
+                },
+                {
+                    "sql_condition": "ABS(\"PESO_l\" - \"PESO_r\") <= 10",
+                    "label_for_charts": "Absolute difference of 'PESO' <= 10",
+                    "m_probability": 0.022220631431033387,
+                    "u_probability": 0.0017060606060606061,
+                    "fix_m_probability": false,
+                    "fix_u_probability": false
+                },
+                {
+                    "sql_condition": "ELSE",
+                    "label_for_charts": "All other comparisons",
+                    "m_probability": 5.029083212384809e-05,
+                    "u_probability": 0.9960542207792208,
+                    "fix_m_probability": false,
+                    "fix_u_probability": false
+                }
+            ],
+            "comparison_description": "CustomComparison"
+        },
+        {
+            "output_column_name": "Limiar Semana de Gestacao",
+            "comparison_levels": [
+                {
+                    "sql_condition": "\"SEMAGESTAC_l\" IS NULL OR \"SEMAGESTAC_r\" IS NULL",
+                    "label_for_charts": "SEMAGESTAC is NULL",
+                    "fix_m_probability": false,
+                    "fix_u_probability": false,
+                    "is_null_level": true
+                },
+                {
+                    "sql_condition": "\"SEMAGESTAC_l\" = \"SEMAGESTAC_r\"",
+                    "label_for_charts": "Exact match on SEMAGESTAC",
+                    "m_probability": 0.659569285556708,
+                    "u_probability": 0.05256366142862052,
+                    "fix_m_probability": false,
+                    "fix_u_probability": false
+                },
+                {
+                    "sql_condition": "ABS(\"SEMAGESTAC_l\" - \"SEMAGESTAC_r\") <= 1",
+                    "label_for_charts": "Absolute difference of 'SEMAGESTAC' <= 1",
+                    "m_probability": 0.18070590636001982,
+                    "u_probability": 0.09560404887533967,
+                    "fix_m_probability": false,
+                    "fix_u_probability": false
+                },
+                {
+                    "sql_condition": "ELSE",
+                    "label_for_charts": "All other comparisons",
+                    "m_probability": 0.1597248080832722,
+                    "u_probability": 0.8518322896960397,
+                    "fix_m_probability": false,
+                    "fix_u_probability": false
+                }
+            ],
+            "comparison_description": "CustomComparison"
+        },
+        {
+            "output_column_name": "Limiar Ra\u00e7a Cor",
+            "comparison_levels": [
+                {
+                    "sql_condition": "\"RACACOR_l\" IS NULL OR \"RACACOR_r\" IS NULL",
+                    "label_for_charts": "RACACOR is NULL",
+                    "fix_m_probability": false,
+                    "fix_u_probability": false,
+                    "is_null_level": true
+                },
+                {
+                    "sql_condition": "\"RACACOR_l\" = \"RACACOR_r\"",
+                    "label_for_charts": "Exact match on RACACOR",
+                    "m_probability": 0.7084095089246121,
+                    "u_probability": 0.44326729660168074,
+                    "fix_m_probability": false,
+                    "fix_u_probability": false
+                },
+                {
+                    "sql_condition": "ELSE",
+                    "label_for_charts": "All other comparisons",
+                    "m_probability": 0.29159049107538804,
+                    "u_probability": 0.5567327033983193,
+                    "fix_m_probability": false,
+                    "fix_u_probability": false
+                }
+            ],
+            "comparison_description": "CustomComparison"
+        },
+        {
+            "output_column_name": "Limiar Gravidez",
+            "comparison_levels": [
+                {
+                    "sql_condition": "\"GRAVIDEZ_l\" IS NULL OR \"GRAVIDEZ_r\" IS NULL",
+                    "label_for_charts": "GRAVIDEZ is NULL",
+                    "fix_m_probability": false,
+                    "fix_u_probability": false,
+                    "is_null_level": true
+                },
+                {
+                    "sql_condition": "\"GRAVIDEZ_l\" = \"GRAVIDEZ_r\"",
+                    "label_for_charts": "Exact match on GRAVIDEZ",
+                    "m_probability": 0.9904392264879907,
+                    "u_probability": 0.8610042098093569,
+                    "fix_m_probability": false,
+                    "fix_u_probability": false
+                },
+                {
+                    "sql_condition": "ELSE",
+                    "label_for_charts": "All other comparisons",
+                    "m_probability": 0.009560773512009403,
+                    "u_probability": 0.13899579019064312,
+                    "fix_m_probability": false,
+                    "fix_u_probability": false
+                }
+            ],
+            "comparison_description": "CustomComparison"
+        },
+        {
+            "output_column_name": "Limiar Parto",
+            "comparison_levels": [
+                {
+                    "sql_condition": "\"PARTO_l\" IS NULL OR \"PARTO_r\" IS NULL",
+                    "label_for_charts": "PARTO is NULL",
+                    "fix_m_probability": false,
+                    "fix_u_probability": false,
+                    "is_null_level": true
+                },
+                {
+                    "sql_condition": "\"PARTO_l\" = \"PARTO_r\"",
+                    "label_for_charts": "Exact match on PARTO",
+                    "m_probability": 0.9777551089575643,
+                    "u_probability": 0.4892635545593347,
+                    "fix_m_probability": false,
+                    "fix_u_probability": false
+                },
+                {
+                    "sql_condition": "ELSE",
+                    "label_for_charts": "All other comparisons",
+                    "m_probability": 0.022244891042435672,
+                    "u_probability": 0.5107364454406653,
+                    "fix_m_probability": false,
+                    "fix_u_probability": false
+                }
+            ],
+            "comparison_description": "CustomComparison"
+        },
+        {
+            "output_column_name": "Limiar Sexo",
+            "comparison_levels": [
+                {
+                    "sql_condition": "\"SEXO_l\" IS NULL OR \"SEXO_r\" IS NULL",
+                    "label_for_charts": "SEXO is NULL",
+                    "fix_m_probability": false,
+                    "fix_u_probability": false,
+                    "is_null_level": true
+                },
+                {
+                    "sql_condition": "\"SEXO_l\" = \"SEXO_r\"",
+                    "label_for_charts": "Exact match on SEXO",
+                    "m_probability": 0.9791006435182179,
+                    "u_probability": 0.4989324316254172,
+                    "fix_m_probability": false,
+                    "fix_u_probability": false
+                },
+                {
+                    "sql_condition": "ELSE",
+                    "label_for_charts": "All other comparisons",
+                    "m_probability": 0.020899356481782108,
+                    "u_probability": 0.5010675683745828,
+                    "fix_m_probability": false,
+                    "fix_u_probability": false
+                }
+            ],
+            "comparison_description": "CustomComparison"
+        }
+    ]
+}
