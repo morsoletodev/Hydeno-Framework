@@ -1,0 +1,24 @@
+[project]
+name = "ensemble_models"
+version = "1.0.0"
+description = ""
+authors = [
+    {name = "R. Morsoleto",email = "106322393+morsoletodev@users.noreply.github.com"}
+]
+readme = "README.md"
+requires-python = ">=3.11,<4.0.0"
+dependencies = [
+    "ipykernel (>=7.2.0,<8.0.0)",
+    "catboost (>=1.2.10,<2.0.0)",
+    "scikit-learn (>=1.8.0,<2.0.0)",
+    "pandas (>=3.0.1,<4.0.0)",
+    "lightgbm (>=4.6.0,<5.0.0)",
+    "imbalanced-learn (>=0.14.1,<0.15.0)",
+    "xgboost (>=3.2.0,<4.0.0)",
+    "pyarrow (>=23.0.1,<24.0.0)",
+]
+
+[tool.poetry]
+packages = [
+    { include = "src" },
+]
