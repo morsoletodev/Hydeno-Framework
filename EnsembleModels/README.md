@@ -1,5 +1,8 @@
 # Ensemble Models
 
+> [!IMPORTANT]  
+> Installation may be done inside WSL subsystem while on a Windows OS. This prevents `PermissionError` from occurring during initial `src` import and `run_pipeline` execution.
+
 ## Notebooks
 The following notebooks present an exploratory analysis of each ensembler with each sampler model chosen.
  - `1-catBoost.ipynb` 
