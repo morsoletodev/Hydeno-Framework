@@ -46,7 +46,7 @@ def run_pipeline(
 
     list_results = []
     logger.info(f"Pipeline consists of {ensemble=} and {sampler=}")
-    logger.info(f"Accuracy | Precision | Recall | F1-score")
+    logger.info("Accuracy | Precision | Recall | F1-score")
 
     for train_index, test_index in skf.split(X, y):
         X_train = X.iloc[train_index, :]
