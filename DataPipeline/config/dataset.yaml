@@ -1,0 +1,81 @@
+datasets:
+  SINASC:
+    dataset_name: SINASC
+    dataset_filename: sinasc
+
+    start_year: 2020
+    final_year: 2023
+
+    columns:
+      - DTNASC
+      - CODMUNNASC
+      - PARTO
+      - SEXO
+      - PESO
+      - SEMAGESTAC
+      - RACACOR
+      - GRAVIDEZ
+      - APGAR5
+      - CONSPRENAT
+      - IDANOMAL
+      - IDADEMAE
+      - TPROBSON
+
+  SIM:
+    dataset_name: SIM
+    dataset_filename: sim
+
+    start_year: 2020
+    final_year: 2024
+
+    columns:
+      - IDADE
+      - DTNASC
+      - CODMUNNATU
+      - PARTO
+      - SEXO
+      - PESO
+      - SEMAGESTAC
+      - RACACOR
+      - GRAVIDEZ
+
+pre_linkage_cols:
+  - DTNASC
+  - CODMUN
+  - PARTO
+  - SEXO
+  - PESO
+  - SEMAGESTAC
+  - RACACOR
+  - GRAVIDEZ
+  - unique_id
+  - APGAR5
+  - CONSPRENAT
+  - IDANOMAL
+  - IDADEMAE
+  - catTPROBSON
+  - catSEMAGESTAC
+  - catPESO
+
+linkage_threshold: -3.5
+linkage_columns:
+  - unique_id
+  - DTNASC
+  - CODMUN
+  - PARTO
+  - SEXO
+  - PESO
+  - SEMAGESTAC
+  - RACACOR
+  - GRAVIDEZ
+
+ensemble_columns:
+  - catSEMAGESTAC
+  - catPESO
+  - APGAR5
+  - CONSPRENAT
+  - IDANOMAL
+  - RACACOR
+  - catTPROBSON
+  - IDADEMAE
+  - OBITO

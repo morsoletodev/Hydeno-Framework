@@ -1,0 +1,13 @@
+# Files
+f_log: ../logs/datapipeline.log
+f_model: ../models/splink.json
+
+# Data folder
+base_data_dir: ../data/
+raw_dir: raw
+interim_dir: interim
+processed_dir: processed
+
+# Extension/Compression used
+base_ext: .parquet
+comp: gzip
