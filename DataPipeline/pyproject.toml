@@ -13,6 +13,8 @@ dependencies = [
     "pandas (>=2.3.3)",
     "numpy (>=2.4.3,<3.0.0)",
     "typer (>=0.24.1,<0.25.0)",
+    "pydantic>=2.13.3",
+    "pydantic-settings>=2.14.0",
 ]
 
 [build-system]
@@ -22,4 +24,10 @@ build-backend = "setuptools.build_meta"
 [tool.poetry]
 packages = [
     { include = "src" },
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.3",
+    "pyyaml>=6.0.3",
 ]
