@@ -3,7 +3,7 @@ import sys
 
 from etlsus import pipeline
 
-from . import config as conf
+from .config import DatasetConfig, GlobalConfig
 
 logger = logging.getLogger(__name__)
 
@@ -12,22 +12,18 @@ def get_dataset():
     """Extracts databases required."""
     logger.info("[Acquire Start]")
 
-    try:
-        pipeline(
-            dataset="SINASC",
-            data_dir=str(conf.RAW_DIR),
-            years_to_extract=conf.SINASC_YEARS,
-            merge_at_end=True,
-        )
-        logger.info("SINASC extracted")
+    dataset_c = DatasetConfig()
 
-        pipeline(
-            dataset="SIM",
-            data_dir=str(conf.RAW_DIR),
-            years_to_extract=conf.SIM_YEARS,
-            merge_at_end=True,
-        )
-        logger.info("SIM extracted")
+    try:
+        for dataset, configs in dataset_c.datasets.items():
+            pipeline(
+                dataset=dataset,
+                data_dir=str(GlobalConfig().raw_dir),
+                years_to_extract=configs.years,
+                merge_at_end=True,
+            )
+            logger.info(f"{dataset} extracted")
+
     except Exception as error:
         logger.critical(
             "(!) Acquire service failed unexpectedly: %s", error, exc_info=True
