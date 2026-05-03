@@ -221,5 +221,10 @@ def create_folders():
 
     config = GlobalConfig()
 
-    for folder in [config.raw_dir, config.interim_dir, config.processed_dir]:
+    for folder in [
+        config.raw_dir,
+        config.interim_dir,
+        config.processed_dir,
+        config.f_log.parent,
+    ]:
         folder.mkdir(parents=True, exist_ok=True)
