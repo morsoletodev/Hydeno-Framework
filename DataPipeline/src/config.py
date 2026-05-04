@@ -217,7 +217,7 @@ ENSEMBLE_COLUMNS = [
 
 
 def create_folders():
-    """Ensures data/ has the correct folder structure inside before execution."""
+    """Ensures the correct folder structure exists before execution."""
 
     config = GlobalConfig()
 
@@ -226,5 +226,6 @@ def create_folders():
         config.interim_dir,
         config.processed_dir,
         config.f_log.parent,
+        config.f_model.parent,
     ]:
         folder.mkdir(parents=True, exist_ok=True)
