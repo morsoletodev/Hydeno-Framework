@@ -1,0 +1,32 @@
+# 'link_only', 'link_and_dedupe', 'dedupe_only'
+link_type: link_only
+
+blocking_rules:
+  block_1:
+    - DTNASC
+    - CODMUN
+
+# Column: thresholds | None
+comparisons:
+  PESO:
+    - 5
+    - 10
+  SEMAGESTAC:
+    - 1
+  RACACOR:
+  GRAVIDEZ:
+  PARTO:
+  SEXO:
+
+link_threshold: -3.5
+
+link_columns:
+  - unique_id
+  - DTNASC
+  - CODMUN
+  - PARTO
+  - SEXO
+  - PESO
+  - SEMAGESTAC
+  - RACACOR
+  - GRAVIDEZ

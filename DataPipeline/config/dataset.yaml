@@ -57,18 +57,6 @@ pre_linkage_cols:
   - catSEMAGESTAC
   - catPESO
 
-linkage_threshold: -3.5
-linkage_columns:
-  - unique_id
-  - DTNASC
-  - CODMUN
-  - PARTO
-  - SEXO
-  - PESO
-  - SEMAGESTAC
-  - RACACOR
-  - GRAVIDEZ
-
 ensemble_columns:
   - catSEMAGESTAC
   - catPESO

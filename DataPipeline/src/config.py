@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import List, Dict
+from typing import List, Dict, Literal
 
 from pydantic import BaseModel, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict, YamlConfigSettingsSource
@@ -106,9 +106,6 @@ class DatasetConfig(BaseSettings):
 
     pre_linkage_cols: List[str]
 
-    linkage_threshold: float
-    linkage_columns: List[str]
-
     ensemble_columns: List[str]
 
     @classmethod
@@ -214,6 +211,31 @@ ENSEMBLE_COLUMNS = [
     "IDADEMAE",
     "OBITO",
 ]
+
+
+class LinkConfig(BaseSettings):
+    model_config = SettingsConfigDict(yaml_file="config/link.yaml")
+
+    link_type: Literal["link_only", "link_and_dedupe", "dedupe_only"]
+
+    blocking_rules: dict[str, list[str]]
+
+    comparisons: dict[str, list[int] | list[float] | None]
+
+    link_threshold: float
+
+    link_columns: list[str]
+
+    @classmethod
+    def settings_customise_sources(
+        cls,
+        settings_cls,
+        init_settings,
+        env_settings,
+        dotenv_settings,
+        file_secret_settings,
+    ):
+        return (YamlConfigSettingsSource(settings_cls),)
 
 
 def create_folders():
