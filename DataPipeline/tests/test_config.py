@@ -51,8 +51,6 @@ def test_datasetconfig_file_loading(dataset_data):
     data_c = conf.DatasetConfig()
 
     assert data_c.pre_linkage_cols == dataset_data["pre_linkage_cols"]
-    assert data_c.linkage_threshold == dataset_data["linkage_threshold"]
-    assert data_c.linkage_columns == dataset_data["linkage_columns"]
     assert data_c.ensemble_columns == dataset_data["ensemble_columns"]
 
 
@@ -84,3 +82,22 @@ def test_datasetconfig_assemble_data_file_paths(dataset_data, global_data):
 
             assert getattr(data_c.datasets[i], folder) == exp_path
             assert getattr(data_c.datasets[i], folder).name == exp_name
+
+
+@pytest.fixture
+def link_data():
+    with open("config/link.yaml") as f:
+        yield yaml.safe_load(f)
+
+
+def test_linkconfig_file_loading(link_data):
+    link_c = conf.LinkConfig()
+
+    print(link_data["comparisons"])
+    print(link_c.comparisons)
+
+    assert link_c.link_type == link_data["link_type"]
+    assert link_c.blocking_rules == link_data["blocking_rules"]
+    assert link_c.comparisons == link_data["comparisons"]
+    assert link_c.link_threshold == link_data["link_threshold"]
+    assert link_c.link_columns == link_data["link_columns"]
