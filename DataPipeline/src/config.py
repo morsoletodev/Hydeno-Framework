@@ -68,6 +68,16 @@ INTERIM_SIM = INTERIM_DIR / "DO.parquet.gzip"
 PROCESSED_SINASC = PROCESSED_DIR / "sinasc.parquet.gzip"
 
 
+class Transformations(BaseModel):
+    drop_duplicates: bool = True
+
+    filter: dict[str, dict[Literal["min", "max"], int | float]] | None = None
+    rename: dict[str, str] | None = None
+
+    binary_groups: dict[str, list[int | float | str]] | None = None
+    thresholds: dict[str, int | float | list[int] | list[float]] | None = None
+
+
 class Dataset(BaseModel):
     dataset_name: str
     years: List[int]
@@ -77,6 +87,8 @@ class Dataset(BaseModel):
     raw: Path
     interim: Path
     processed: Path
+
+    transformations: Transformations
 
     @model_validator(mode="before")
     @classmethod

@@ -21,6 +21,22 @@ datasets:
       - IDADEMAE
       - TPROBSON
 
+    transformations:
+      filter:
+        PESO:
+          min: 350
+          max: 6500
+
+      rename:
+        "CODMUNNASC": "CODMUN"
+
+      binary_groups:
+        TPROBSON: [1, 2, 3, 4, 6]
+
+      thresholds:
+        PESO: 2500
+        SEMAGESTAC: 37
+
   SIM:
     dataset_name: SIM
     dataset_filename: sim
@@ -39,6 +55,17 @@ datasets:
       - RACACOR
       - GRAVIDEZ
 
+    transformations:
+      filter:
+        IDADE:
+          max: 228
+        PESO:
+          min: 350
+          max: 6500
+
+      rename:
+        "CODMUNNATU": "CODMUN"
+
 pre_linkage_cols:
   - DTNASC
   - CODMUN
@@ -53,17 +80,17 @@ pre_linkage_cols:
   - CONSPRENAT
   - IDANOMAL
   - IDADEMAE
-  - catTPROBSON
-  - catSEMAGESTAC
-  - catPESO
+  - bTPROBSON
+  - tSEMAGESTAC
+  - tPESO
 
 ensemble_columns:
-  - catSEMAGESTAC
-  - catPESO
+  - tSEMAGESTAC
+  - tPESO
   - APGAR5
   - CONSPRENAT
   - IDANOMAL
   - RACACOR
-  - catTPROBSON
+  - bTPROBSON
   - IDADEMAE
   - OBITO
