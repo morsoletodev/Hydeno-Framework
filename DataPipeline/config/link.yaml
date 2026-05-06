@@ -30,3 +30,9 @@ link_columns:
   - SEMAGESTAC
   - RACACOR
   - GRAVIDEZ
+
+recall: 0.00001
+
+max_pairs: 1e7
+
+seed: 42

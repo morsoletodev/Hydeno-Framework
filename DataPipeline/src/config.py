@@ -238,6 +238,12 @@ class LinkConfig(BaseSettings):
 
     link_columns: list[str]
 
+    recall: float
+
+    max_pairs: float
+
+    training_seed: int
+
     @classmethod
     def settings_customise_sources(
         cls,
