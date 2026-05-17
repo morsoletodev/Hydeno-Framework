@@ -1,7 +1,6 @@
 datasets:
   SINASC:
-    dataset_name: SINASC
-    dataset_filename: sinasc
+    file_name: DN
 
     start_year: 2020
     final_year: 2023
@@ -38,8 +37,7 @@ datasets:
         SEMAGESTAC: 37
 
   SIM:
-    dataset_name: SIM
-    dataset_filename: sim
+    file_name: DO
 
     start_year: 2020
     final_year: 2024
@@ -65,24 +63,6 @@ datasets:
 
       rename:
         "CODMUNNATU": "CODMUN"
-
-pre_linkage_cols:
-  - DTNASC
-  - CODMUN
-  - PARTO
-  - SEXO
-  - PESO
-  - SEMAGESTAC
-  - RACACOR
-  - GRAVIDEZ
-  - unique_id
-  - APGAR5
-  - CONSPRENAT
-  - IDANOMAL
-  - IDADEMAE
-  - bTPROBSON
-  - tSEMAGESTAC
-  - tPESO
 
 ensemble_columns:
   - tSEMAGESTAC

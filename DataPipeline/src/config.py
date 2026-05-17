@@ -1,7 +1,8 @@
 from pathlib import Path
 from typing import Literal
+from functools import lru_cache
 
-from pydantic import BaseModel, model_validator
+from pydantic import BaseModel, model_validator, Field, computed_field
 from pydantic_settings import BaseSettings, SettingsConfigDict, YamlConfigSettingsSource
 
 
@@ -11,30 +12,30 @@ class GlobalConfig(BaseSettings):
     model_config = SettingsConfigDict(yaml_file="config/global.yaml")
 
     f_log: Path
-    f_model: Path
+    f_splink_model: Path
 
-    raw_dir: Path
-    interim_dir: Path
-    processed_dir: Path
+    dir_data: Path = Field(exclude=True)
+    dir_raw: Path = Path("raw")
+    dir_interim: Path = Path("interim")
+    dir_processed: Path = Path("processed")
 
-    base_ext: str
+    ext: str
     comp: str | None = None
+    merge_at_end: bool = True
 
-    @model_validator(mode="before")
-    @classmethod
-    def assemble_data(cls, data: dict) -> dict:
+    @model_validator(mode="after")
+    def assemble_data(self) -> "GlobalConfig":
         # Build file paths
-        for file in data.keys():
-            if "f_" in file:
-                data[file] = Path(data[file]).resolve()
+        self.f_log = self.f_log.resolve()
+        self.f_splink_model = self.f_splink_model.resolve()
 
         # Build data/ related paths
-        base_dir = Path(data.pop("base_data_dir")).resolve()
-        for folder in ["raw_dir", "interim_dir", "processed_dir"]:
-            if folder in data:
-                data[folder] = base_dir / data[folder]
+        self.dir_data = self.dir_data.resolve()
+        self.dir_raw = self.dir_data / self.dir_raw
+        self.dir_interim = self.dir_data / self.dir_interim
+        self.dir_processed = self.dir_data / self.dir_processed
 
-        return data
+        return self
 
     @classmethod
     def settings_customise_sources(
@@ -48,10 +49,15 @@ class GlobalConfig(BaseSettings):
         return (YamlConfigSettingsSource(settings_cls),)
 
 
+class FilterBounds(BaseModel):
+    min: int | float | None = None
+    max: int | float | None = None
+
+
 class Transformations(BaseModel):
     drop_duplicates: bool = True
 
-    filter: dict[str, dict[Literal["min", "max"], int | float]] | None = None
+    filter: dict[str, FilterBounds] | None = None
     rename: dict[str, str] | None = None
 
     binary_groups: dict[str, list[int | float | str]] | None = None
@@ -59,44 +65,23 @@ class Transformations(BaseModel):
 
 
 class Dataset(BaseModel):
-    dataset_name: str
-    years: list[int]
+    file_name: str
+
+    start_year: int = Field(exclude=True)
+    final_year: int = Field(exclude=True)
 
     columns: list[str]
-
-    raw: Path
-    interim: Path
-    processed: Path
-
     transformations: Transformations
 
-    @model_validator(mode="before")
-    @classmethod
-    def assemble_data(cls, data: dict) -> dict:
-        global_c = GlobalConfig()
-
-        # Build years
-        data["years"] = list(range(data.pop("start_year"), data.pop("final_year")))
-
-        # Build file paths for raw, interim and processed folders
-        name = data.pop("dataset_filename")
-        filename = (
-            f"{name}.{global_c.base_ext}.{global_c.comp}"
-            if global_c.comp
-            else f"{name}.{global_c.base_ext}"
-        )
-        for file in ["raw", "interim", "processed"]:
-            data[file] = getattr(global_c, f"{file}_dir") / filename
-
-        return data
+    @computed_field
+    def years(self) -> list[int]:
+        return list(range(self.start_year, self.final_year))
 
 
 class DatasetConfig(BaseSettings):
     model_config = SettingsConfigDict(yaml_file="config/dataset.yaml")
 
     datasets: dict[str, Dataset]
-
-    pre_linkage_cols: list[str]
 
     ensemble_columns: list[str]
 
@@ -129,7 +114,7 @@ class LinkConfig(BaseSettings):
 
     max_pairs: float
 
-    training_seed: int
+    seed: int
 
     @classmethod
     def settings_customise_sources(
@@ -143,16 +128,45 @@ class LinkConfig(BaseSettings):
         return (YamlConfigSettingsSource(settings_cls),)
 
 
+@lru_cache(maxsize=1)
+def get_global_config() -> GlobalConfig:
+    return GlobalConfig()
+
+
+@lru_cache(maxsize=1)
+def get_dataset_config() -> DatasetConfig:
+    return DatasetConfig()
+
+
+@lru_cache(maxsize=1)
+def get_link_config() -> LinkConfig:
+    return LinkConfig()
+
+
+def get_dataset_paths(ds: Dataset) -> dict[str, Path]:
+    gc = get_global_config()
+
+    name = (
+        f"{ds.file_name}.{gc.ext}.{gc.comp}" if gc.comp else f"{ds.file_name}.{gc.ext}"
+    )
+
+    return {
+        "raw": gc.dir_raw / name,
+        "interim": gc.dir_interim / name,
+        "processed": gc.dir_processed / name,
+    }
+
+
 def create_folders():
     """Ensures the correct folder structure exists before execution."""
 
-    config = GlobalConfig()
+    config = get_global_config()
 
     for folder in [
-        config.raw_dir,
-        config.interim_dir,
-        config.processed_dir,
+        config.dir_raw,
+        config.dir_interim,
+        config.dir_processed,
         config.f_log.parent,
-        config.f_model.parent,
+        config.f_splink_model.parent,
     ]:
         folder.mkdir(parents=True, exist_ok=True)

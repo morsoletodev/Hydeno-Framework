@@ -1,13 +1,10 @@
 # Files
 f_log: ../logs/datapipeline.log
-f_model: ../models/splink.json
+f_splink_model: ../models/splink.json
 
-# Data folder
-base_data_dir: ../data/
-raw_dir: raw
-interim_dir: interim
-processed_dir: processed
+# Data folder location
+dir_data: ../data/
 
 # Extension/Compression used
-base_ext: .parquet
+ext: parquet
 comp: gzip
