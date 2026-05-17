@@ -1,7 +1,7 @@
 import logging
 
 from .cli import app
-from .config import create_folders, GlobalConfig
+from .config import create_folders, get_global_config
 
 logger = logging.getLogger(__name__)
 
@@ -13,7 +13,7 @@ if __name__ == "__main__":
 
     format = "%(asctime)s %(name)-12s %(levelname)-8s %(message)s"
     logging.basicConfig(
-        filename=GlobalConfig().f_log, level=logging.INFO, format=format
+        filename=get_global_config().f_log, level=logging.INFO, format=format
     )
 
     app()

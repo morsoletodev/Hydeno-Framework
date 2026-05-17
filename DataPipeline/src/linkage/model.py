@@ -6,11 +6,24 @@ from splink.internals.blocking_rule_creator import BlockingRuleCreator
 from splink.comparison_library import CustomComparison
 import splink.comparison_level_library as cll
 
-from ..config import DatasetConfig, LinkConfig, Dataset
+from ..config import get_dataset_config, get_dataset_paths, get_link_config, Dataset
 
 
-def _dfs(link_columns: list[str], datasets: dict[str, Dataset]) -> list[pd.DataFrame]:
-    return [pd.read_parquet(x.interim, columns=link_columns) for x in datasets.values()]
+def _dfs(
+    db_api: DuckDBAPI, link_columns: list[str], datasets: dict[str, Dataset]
+) -> list[pd.DataFrame]:
+    table_names = []
+    for ds in datasets.values():
+        view_name = f"{ds.file_name}_view"
+
+        select_cols = ", ".join(f'"{col}"' for col in link_columns)
+
+        safe_path = str(get_dataset_paths(ds)["interim"]).replace("'", "''")
+        sql = f"CREATE VIEW {view_name} AS SELECT {select_cols} FROM read_parquet('{safe_path}')"
+        db_api._con.execute(sql)
+        table_names.append(view_name)
+
+    return table_names
 
 
 def _comparisons(comparisons: dict[str, list[Any]]) -> list[CustomComparison]:
@@ -40,16 +53,16 @@ def _blocking_rules(blocking_rules: dict[str, list[str]]) -> list[BlockingRuleCr
     return [block_on(*x) for x in blocking_rules.values()]
 
 
-def create_linker() -> Linker:
-    dc = DatasetConfig()
-    lc = LinkConfig()
+def create_linker(db_api: DuckDBAPI) -> Linker:
+    dc = get_dataset_config()
+    lc = get_link_config()
 
     return Linker(
-        _dfs(lc.link_columns, dc.datasets),
+        _dfs(db_api, lc.link_columns, dc.datasets),
         SettingsCreator(
             link_type=lc.link_type,
             comparisons=_comparisons(lc.comparisons),
             blocking_rules_to_generate_predictions=_blocking_rules(lc.blocking_rules),
         ),
-        db_api=DuckDBAPI(),
+        db_api=db_api,
     )

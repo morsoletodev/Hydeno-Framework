@@ -1,23 +1,26 @@
 import logging
-import sys
 from pathlib import Path
 
 import pandas as pd
 import numpy as np
+import typer
 
 from . import config as conf
-from .config import GlobalConfig, DatasetConfig
+from .config import (
+    get_dataset_paths,
+    get_global_config,
+    get_dataset_config,
+    FilterBounds,
+)
 
 logger = logging.getLogger(__name__)
 
 
-def _filter(
-    df: pd.DataFrame, filters: dict[str, dict[str, int | float]]
-) -> pd.DataFrame:
+def _filter(df: pd.DataFrame, filters: dict[str, FilterBounds]) -> pd.DataFrame:
     for col, bounds in filters.items():
-        if (min := bounds.get("min")) is not None:
+        if (min := bounds.min) is not None:
             df = df.loc[df[col] >= min]
-        if (max := bounds.get("max")) is not None:
+        if (max := bounds.max) is not None:
             df = df.loc[df[col] <= max]
     return df.reset_index(drop=True)
 
@@ -35,12 +38,9 @@ def _threshold(
 ) -> pd.DataFrame:
     for col, intervals in thres.items():
         if isinstance(intervals, list):
-            intervals = [(df[col].min() - 1), *intervals, df[col].max()]
-            print(intervals)
-
             df[f"t{col}"] = pd.cut(
-                df[col], intervals, labels=range(len(intervals) - 1)
-            ).astype(df[col].dtype)
+                df[col], intervals, labels=False, include_lowest=True
+            )
         else:
             df[f"t{col}"] = (df[col] >= intervals).astype(int)
     return df
@@ -52,9 +52,9 @@ def _process(
     dataset_name: str,
     trans: conf.Transformations,
     read_columns: list[str] | None = None,
-):
+) -> None:
     df = pd.read_parquet(f_input, columns=read_columns)
-    logger.info(f"{dataset_name} loaded")
+    logger.info("%s loaded", dataset_name)
 
     # Row Filter
     if trans.drop_duplicates:
@@ -65,7 +65,8 @@ def _process(
         logger.info("Filter: done")
 
     # Linkage Requirements
-    df["unique_id"] = range(df.shape[0])
+    df = df.reset_index(drop=True)
+    df["unique_id"] = f"{dataset_name}_" + df.index.astype(str)
     logger.info("Linkage requirements: done")
     if trans.rename:
         df = df.rename(columns=trans.rename)
@@ -79,25 +80,30 @@ def _process(
         df = _threshold(df, trans.thresholds)
         logger.info("Threshold: done")
 
-    df.to_parquet(f_output, compression=GlobalConfig().comp)
-    logger.info(f"{dataset_name} saved")
+    df.to_parquet(f_output, compression=get_global_config().comp)
+    logger.info("%s saved", dataset_name)
 
 
 def process_data():
     """Orchestrate data processing"""
     logger.info("[Process Start]")
 
-    datasets = DatasetConfig().datasets
+    datasets = get_dataset_config().datasets
 
     try:
         for dataset, items in datasets.items():
+            paths = get_dataset_paths(items)
             _process(
-                items.raw, items.interim, dataset, items.transformations, items.columns
+                paths["raw"],
+                paths["interim"],
+                dataset,
+                items.transformations,
+                items.columns,
             )
     except Exception as error:
         logger.critical(
             "(!) Process service failed unexpectedly: %s", error, exc_info=True
         )
-        sys.exit(1)
+        raise typer.Exit(code=1)
 
     logger.info("[Process End]")
